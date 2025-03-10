@@ -3,6 +3,7 @@
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RentalController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,12 +11,14 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-// Route::get('/', function (Request $request) {
-//     return 'API';
-// });
-
 Route::apiResource('cars', CarController::class);
 
 Route::apiResource('rentals', RentalController::class);
 
 Route::apiResource('payments', PaymentController::class);
+
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');

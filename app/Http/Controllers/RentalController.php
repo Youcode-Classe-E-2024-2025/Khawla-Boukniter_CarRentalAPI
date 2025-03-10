@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rental;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class RentalController extends Controller
+class RentalController extends Controller implements HasMiddleware
 {
+
+    public static function middleware()
+    {
+        return [
+            new Middleware('auth:sanctum', except: ['index', 'show'])
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -27,7 +36,7 @@ class RentalController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date'
         ]);
 
-        $rental = Rental::create($validated);
+        $rental = $request->user()->rentals()->create($validated);
 
         return $rental;
     }

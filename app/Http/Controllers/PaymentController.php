@@ -26,7 +26,7 @@ class PaymentController extends Controller
             'payment_date' => 'required|date|date_format:Y-m-d',
         ]);
 
-        $payment = Payment::create($validated);
+        $payment = $request->user()->payments()->create($validated);
 
         return $payment;
     }
