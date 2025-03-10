@@ -12,7 +12,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        return Payment::all();
     }
 
     /**
@@ -20,7 +20,15 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'rental_id' => 'required|exists:rentals,id',
+            'amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date|date_format:Y-m-d',
+        ]);
+
+        $payment = Payment::create($validated);
+
+        return $payment;
     }
 
     /**
@@ -28,7 +36,7 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        //
+        return $payment;
     }
 
     /**
@@ -36,7 +44,15 @@ class PaymentController extends Controller
      */
     public function update(Request $request, Payment $payment)
     {
-        //
+        $validated = $request->validate([
+            'rental_id' => 'required|exists:rentals,id',
+            'amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date|date_format:Y-m-d',
+        ]);
+
+        $payment->update($validated);
+
+        return $payment;
     }
 
     /**
@@ -44,6 +60,8 @@ class PaymentController extends Controller
      */
     public function destroy(Payment $payment)
     {
-        //
+        $payment->delete();
+
+        return ['message' => 'payment deleted'];
     }
 }

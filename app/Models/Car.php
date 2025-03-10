@@ -10,6 +10,7 @@ class Car extends Model
         'model',
         'make',
         'year',
+        'price',
         'is_available'
     ];
 

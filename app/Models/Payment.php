@@ -9,6 +9,7 @@ class Payment extends Model
     protected $fillable = [
         'rental_id',
         'amount',
+        'payment_date',
         'statut'
     ];
 

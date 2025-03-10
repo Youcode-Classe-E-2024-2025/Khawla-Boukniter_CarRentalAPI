@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('rental_id')->constrained()->onDelete('cascade');
             $table->decimal('amount');
+            $table->timestamp('payment_date');
             $table->enum('statut', ['pending', 'completed', 'failed'])->default('failed');
         });
     }

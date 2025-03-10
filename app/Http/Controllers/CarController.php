@@ -12,7 +12,7 @@ class CarController extends Controller
      */
     public function index()
     {
-        //
+        return Car::all();
     }
 
     /**
@@ -20,7 +20,16 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'make' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
+            'year' => 'required|integer|digits:4',
+            'price' => 'required|numeric|min:0'
+        ]);
+
+        $car = Car::create($validated);
+
+        return $car;
     }
 
     /**
@@ -28,7 +37,7 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        //
+        return $car;
     }
 
     /**
@@ -36,7 +45,16 @@ class CarController extends Controller
      */
     public function update(Request $request, Car $car)
     {
-        //
+        $validated = $request->validate([
+            'make' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
+            'year' => 'required|integer|digits:4',
+            'price' => 'required|numeric|min:0'
+        ]);
+
+        $car->update($validated);
+
+        return $car;
     }
 
     /**
@@ -44,6 +62,8 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        //
+        $car->delete();
+
+        return ['message' => 'the car was deleted'];
     }
 }

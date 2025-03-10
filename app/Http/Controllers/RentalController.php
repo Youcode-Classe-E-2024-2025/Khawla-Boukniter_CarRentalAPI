@@ -12,7 +12,7 @@ class RentalController extends Controller
      */
     public function index()
     {
-        //
+        return Rental::all();
     }
 
     /**
@@ -20,7 +20,16 @@ class RentalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'car_id' => 'required|exists:cars,id',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after_or_equal:start_date'
+        ]);
+
+        $rental = Rental::create($validated);
+
+        return $rental;
     }
 
     /**
@@ -28,7 +37,7 @@ class RentalController extends Controller
      */
     public function show(Rental $rental)
     {
-        //
+        return $rental;
     }
 
     /**
@@ -36,7 +45,16 @@ class RentalController extends Controller
      */
     public function update(Request $request, Rental $rental)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'car_id' => 'required|exists:cars,id',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after_or_equal:start_date'
+        ]);
+
+        $rental->update($validated);
+
+        return $rental;
     }
 
     /**
@@ -44,6 +62,8 @@ class RentalController extends Controller
      */
     public function destroy(Rental $rental)
     {
-        //
+        $rental->delete();
+
+        return ['message' => 'rental deleted'];
     }
 }

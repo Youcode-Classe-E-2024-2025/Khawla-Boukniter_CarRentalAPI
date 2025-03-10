@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('make');
             $table->string('model');
             $table->year('year');
+            $table->decimal('price');
             $table->boolean('is_available')->default(true);
         });
     }
