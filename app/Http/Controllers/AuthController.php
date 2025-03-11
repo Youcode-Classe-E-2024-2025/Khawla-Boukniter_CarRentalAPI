@@ -6,8 +6,33 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @OA\Info(
+ *    title="CarRental API",
+ *    version="1.0.0",
+ * )
+ */
 class AuthController extends Controller
 {
+
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     summary="Register a new user",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"name","email","password"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="password", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="User registered successfully",
+     *     )
+     * )
+     */
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -26,6 +51,23 @@ class AuthController extends Controller
         ];
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     summary="User login",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"email","password"},
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="password", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login successful"
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $validated = $request->validate([
@@ -47,6 +89,17 @@ class AuthController extends Controller
         ];
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="User logout",
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logout successful"
+     *     )
+     * )
+     */
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();

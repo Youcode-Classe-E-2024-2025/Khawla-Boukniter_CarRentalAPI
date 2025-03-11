@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * @OA\Tag(
+ *     name="Rentals",
+ *     description="API Endpoints for rental management"
+ * )
+ */
+
 class RentalController extends Controller implements HasMiddleware
 {
 
@@ -19,7 +26,40 @@ class RentalController extends Controller implements HasMiddleware
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/rentals",
+     *     tags={"Rentals"},
+     *     summary="Get list of rentals",
+     *     @OA\Parameter(
+     *         name="user_id",
+     *         in="query",
+     *         description="Filter by user"
+     *     ),
+     *     @OA\Parameter(
+     *         name="car_id",
+     *         in="query",
+     *         description="Filter by car"
+     *     ),
+     *     @OA\Parameter(
+     *         name="start_date",
+     *         in="query",
+     *         description="Filter by start date"
+     *     ),
+     *     @OA\Parameter(
+     *         name="end_date",
+     *         in="query",
+     *         description="Filter by end date"
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Filter by status"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of rentals"
+     *     )
+     * )
      */
     public function index(Request $request)
     {
@@ -49,7 +89,25 @@ class RentalController extends Controller implements HasMiddleware
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/rentals",
+     *     tags={"Rentals"},
+     *     summary="Create a new rental",
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"user_id","car_id","start_date","end_date"},
+     *             @OA\Property(property="user_id", type="integer"),
+     *             @OA\Property(property="car_id", type="integer"),
+     *             @OA\Property(property="start_date", type="string", format="date"),
+     *             @OA\Property(property="end_date", type="string", format="date")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Rental created"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -66,7 +124,21 @@ class RentalController extends Controller implements HasMiddleware
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/rentals/{id}",
+     *     tags={"Rentals"},
+     *     summary="Get rental details",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Rental ID"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rental details"
+     *     )
+     * )
      */
     public function show(Rental $rental)
     {
@@ -74,7 +146,31 @@ class RentalController extends Controller implements HasMiddleware
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/rentals/{id}",
+     *     tags={"Rentals"},
+     *     summary="Update rental details",
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Rental ID"
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"user_id","car_id","start_date","end_date"},
+     *             @OA\Property(property="user_id", type="integer"),
+     *             @OA\Property(property="car_id", type="integer"),
+     *             @OA\Property(property="start_date", type="string", format="date"),
+     *             @OA\Property(property="end_date", type="string", format="date")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rental updated"
+     *     )
+     * )
      */
     public function update(Request $request, Rental $rental)
     {
@@ -93,7 +189,22 @@ class RentalController extends Controller implements HasMiddleware
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/rentals/{id}",
+     *     tags={"Rentals"},
+     *     summary="Delete a rental",
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Rental ID"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rental deleted"
+     *     )
+     * )
      */
     public function destroy(Rental $rental)
     {

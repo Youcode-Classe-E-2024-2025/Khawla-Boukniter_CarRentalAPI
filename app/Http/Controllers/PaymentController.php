@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
+/**
+ * @OA\Tag(
+ *     name="Payments",
+ *     description="API Endpoints for payment management"
+ * )
+ */
 class PaymentController extends Controller implements HasMiddleware
 {
     public static function middleware()
@@ -17,7 +23,40 @@ class PaymentController extends Controller implements HasMiddleware
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/payments",
+     *     tags={"Payments"},
+     *     summary="Get list of payments",
+     *     @OA\Parameter(
+     *         name="rental_id",
+     *         in="query",
+     *         description="Filter by rental"
+     *     ),
+     *     @OA\Parameter(
+     *         name="min_amount",
+     *         in="query",
+     *         description="Filter by min amount"
+     *     ),
+     *     @OA\Parameter(
+     *         name="max_amount",
+     *         in="query",
+     *         description="Filter by max amount"
+     *     ),
+     *     @OA\Parameter(
+     *         name="payment_date",
+     *         in="query",
+     *         description="Filter by payment date"
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Filter by status"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of payments"
+     *     )
+     * )
      */
     public function index(Request $request)
     {
@@ -47,7 +86,24 @@ class PaymentController extends Controller implements HasMiddleware
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/payments",
+     *     tags={"Payments"},
+     *     summary="Create a new payment",
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"rental_id","amount","payment_date"},
+     *             @OA\Property(property="rental_id", type="integer"),
+     *             @OA\Property(property="amount", type="number"),
+     *             @OA\Property(property="payment_date", type="string", format="date")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Payment created"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -63,7 +119,21 @@ class PaymentController extends Controller implements HasMiddleware
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/payments/{id}",
+     *     tags={"Payments"},
+     *     summary="Get payment details",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Payment ID"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment details"
+     *     )
+     * )
      */
     public function show(Payment $payment)
     {
@@ -71,7 +141,30 @@ class PaymentController extends Controller implements HasMiddleware
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/payments/{id}",
+     *     tags={"Payments"},
+     *     summary="Update payment details",
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Payment ID"
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"rental_id","amount","payment_date"},
+     *             @OA\Property(property="rental_id", type="integer"),
+     *             @OA\Property(property="amount", type="number"),
+     *             @OA\Property(property="payment_date", type="string", format="date")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment updated"
+     *     )
+     * )
      */
     public function update(Request $request, Payment $payment)
     {
@@ -87,7 +180,22 @@ class PaymentController extends Controller implements HasMiddleware
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/payments/{id}",
+     *     tags={"Payments"},
+     *     summary="Delete a payment",
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Payment ID"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment deleted"
+     *     )
+     * )
      */
     public function destroy(Payment $payment)
     {
