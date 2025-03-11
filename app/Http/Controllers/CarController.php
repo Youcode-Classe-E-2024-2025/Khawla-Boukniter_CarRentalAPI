@@ -63,23 +63,23 @@ class CarController extends Controller implements HasMiddleware
         $query = Car::query();
 
         if ($request->has('make')) {
-            $query->where('make', '%' . $request->make . '%');
+            $query->where('make', 'like', '%' . $request->make . '%');
         }
 
         if ($request->has('model')) {
-            $query->where('model', '%' . $request->model . '%');
+            $query->where('model', 'like', '%' . $request->model . '%');
         }
 
         if ($request->has('year')) {
-            $query->where('year', '%' . $request->year . '%');
+            $query->where('year', 'like', '%' . $request->year . '%');
         }
 
         if ($request->has('min_price')) {
-            $query->where('price', '>=' . $request->min_price);
+            $query->where('price', 'like', '>=' . $request->min_price);
         }
 
         if ($request->has('max_price')) {
-            $query->where('price', '<=' . $request->max_price);
+            $query->where('price', 'like', '<=' . $request->max_price);
         }
 
         return $query->paginate(10);
@@ -112,8 +112,11 @@ class CarController extends Controller implements HasMiddleware
             'make' => 'required|string|max:255',
             'model' => 'required|string|max:255',
             'year' => 'required|integer|digits:4',
-            'price' => 'required|numeric|min:0'
+            'price' => 'required|numeric|min:0',
+            'is_available' => 'boolean'
         ]);
+
+        $validated['is_available'] = true;
 
         $car = Car::create($validated);
 

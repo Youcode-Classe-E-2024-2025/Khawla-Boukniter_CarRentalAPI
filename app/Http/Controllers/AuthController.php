@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Hash;
  *    title="CarRental API",
  *    version="1.0.0",
  * )
+ * @OA\Tag(
+ *     name="Authentication",
+ *     description="API Endpoints for authentication"
+ * )
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     securityScheme="bearerAuth"
+ * )
  */
 class AuthController extends Controller
 {
@@ -18,6 +28,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/register",
+     *     tags={"Authentication"},
      *     summary="Register a new user",
      *     @OA\RequestBody(
      *         @OA\JsonContent(
@@ -54,6 +65,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/login",
+     *     tags={"Authentication"},
      *     summary="User login",
      *     @OA\RequestBody(
      *         @OA\JsonContent(
@@ -92,6 +104,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/logout",
+     *     tags={"Authentication"},
      *     summary="User logout",
      *     security={{ "bearerAuth": {} }},
      *     @OA\Response(
