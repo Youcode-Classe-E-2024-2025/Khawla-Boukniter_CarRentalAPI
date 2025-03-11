@@ -17,6 +17,7 @@ class RentalController extends Controller implements HasMiddleware
             new Middleware('auth:sanctum', except: ['index', 'show'])
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
