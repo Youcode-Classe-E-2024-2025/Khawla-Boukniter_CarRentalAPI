@@ -6,6 +6,8 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
 
 /**
  * @OA\Tag(
@@ -113,9 +115,24 @@ class PaymentController extends Controller implements HasMiddleware
             'payment_date' => 'required|date|date_format:Y-m-d',
         ]);
 
-        $payment = $request->user()->payments()->create($validated);
+        Stripe::setApiKey(config('stripe.secret'));
 
-        return response()->json($payment, 201);
+        try {
+            $paymentIntent = PaymentIntent::create([
+                'amount' => $validated['amount'] * 100,
+                'currency' => 'MAD',
+                'metadate' => ['rental_id' => $validated['rental_id']]
+            ]);
+
+            $validated['status'] = 'pending';
+            $validated['stripe_payment_id'] = $paymentIntent->id;
+
+            $payment = $request->user()->payments()->create($validated);
+
+            return response()->json(['payment' => $payment, 'clientSecret' => $paymentIntent->client_secret], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**

@@ -10,7 +10,8 @@ class Payment extends Model
         'rental_id',
         'amount',
         'payment_date',
-        'statut'
+        'statut',
+        'stripe_payment_id'
     ];
 
     public function rentals()
