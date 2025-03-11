@@ -10,9 +10,31 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Payment::paginate(10);
+        $query = Payment::query();
+
+        if ($request->has('rental_id')) {
+            $query->where('rental_id', $request->rental_id);
+        }
+
+        if ($request->has('min_amount')) {
+            $query->where('amount', '>=' . $request->min_amount);
+        }
+
+        if ($request->has('max_amount')) {
+            $query->where('amount', '<=' . $request->max_amount);
+        }
+
+        if ($request->has('payment_date')) {
+            $query->where('payment_date', $request->payment_date);
+        }
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        return $query->paginate(10);
     }
 
     /**

@@ -20,9 +20,31 @@ class RentalController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Rental::paginate(10);
+        $query = Rental::query();
+
+        if ($request->has('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        if ($request->has('car_id')) {
+            $query->where('car_id', $request->car_id);
+        }
+
+        if ($request->has('start_date')) {
+            $query->where('start_date', '>=' . $request->start_date);
+        }
+
+        if ($request->has('end_date')) {
+            $query->where('end_date', '<=' . $request->end_date);
+        }
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        return $query->paginate(10);
     }
 
     /**
