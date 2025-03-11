@@ -28,7 +28,7 @@ class PaymentController extends Controller
 
         $payment = $request->user()->payments()->create($validated);
 
-        return $payment;
+        return response()->json($payment, 201);
     }
 
     /**
@@ -36,7 +36,7 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        return $payment;
+        return response()->json($payment, 200);
     }
 
     /**
@@ -52,7 +52,7 @@ class PaymentController extends Controller
 
         $payment->update($validated);
 
-        return $payment;
+        return response()->json($payment, 200);
     }
 
     /**
@@ -62,6 +62,6 @@ class PaymentController extends Controller
     {
         $payment->delete();
 
-        return ['message' => 'payment deleted'];
+        return response()->json(['message' => 'payment deleted'], 200);
     }
 }

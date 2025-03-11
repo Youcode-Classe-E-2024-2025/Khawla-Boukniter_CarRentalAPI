@@ -29,7 +29,7 @@ class CarController extends Controller
 
         $car = Car::create($validated);
 
-        return $car;
+        return response()->json($car, 201);
     }
 
     /**
@@ -37,7 +37,7 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        return $car;
+        return response()->json($car, 200);
     }
 
     /**
@@ -54,7 +54,7 @@ class CarController extends Controller
 
         $car->update($validated);
 
-        return $car;
+        return response()->json($car, 200);
     }
 
     /**
@@ -64,6 +64,6 @@ class CarController extends Controller
     {
         $car->delete();
 
-        return ['message' => 'the car was deleted'];
+        return response()->json(['message' => 'car deleted'], 200);
     }
 }

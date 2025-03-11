@@ -39,7 +39,7 @@ class RentalController extends Controller implements HasMiddleware
 
         $rental = $request->user()->rentals()->create($validated);
 
-        return $rental;
+        return response()->json($rental, 201);
     }
 
     /**
@@ -47,7 +47,7 @@ class RentalController extends Controller implements HasMiddleware
      */
     public function show(Rental $rental)
     {
-        return $rental;
+        return response()->json($rental, 200);
     }
 
     /**
@@ -66,7 +66,7 @@ class RentalController extends Controller implements HasMiddleware
 
         $rental->update($validated);
 
-        return $rental;
+        return response()->json($rental, 200);
     }
 
     /**
@@ -79,6 +79,6 @@ class RentalController extends Controller implements HasMiddleware
 
         $rental->delete();
 
-        return ['message' => 'rental deleted'];
+        return response()->json(['message' => 'rental deleted'], 200);
     }
 }
