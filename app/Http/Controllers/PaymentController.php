@@ -12,7 +12,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        return Payment::all();
+        return Payment::paginate(10);
     }
 
     /**

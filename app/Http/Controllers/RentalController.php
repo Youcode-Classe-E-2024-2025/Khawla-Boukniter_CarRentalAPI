@@ -6,6 +6,7 @@ use App\Models\Rental;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Support\Facades\Gate;
 
 class RentalController extends Controller implements HasMiddleware
 {
@@ -21,7 +22,7 @@ class RentalController extends Controller implements HasMiddleware
      */
     public function index()
     {
-        return Rental::all();
+        return Rental::paginate(10);
     }
 
     /**
@@ -54,6 +55,8 @@ class RentalController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Rental $rental)
     {
+        Gate::authorize('modify', $rental);
+
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'car_id' => 'required|exists:cars,id',
@@ -71,6 +74,9 @@ class RentalController extends Controller implements HasMiddleware
      */
     public function destroy(Rental $rental)
     {
+
+        Gate::authorize('modify', $rental);
+
         $rental->delete();
 
         return ['message' => 'rental deleted'];
