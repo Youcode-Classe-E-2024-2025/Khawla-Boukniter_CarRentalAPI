@@ -109,15 +109,17 @@ class PaymentController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'rental_id' => 'required|exists:rentals,id',
-            'amount' => 'required|numeric|min:0',
-            'payment_date' => 'required|date|date_format:Y-m-d',
-        ]);
-
-        Stripe::setApiKey(config('stripe.secret'));
 
         try {
+
+            $validated = $request->validate([
+                'rental_id' => 'required|exists:rentals,id',
+                'amount' => 'required|numeric|min:0',
+                'payment_date' => 'required|date|date_format:Y-m-d',
+            ]);
+
+            Stripe::setApiKey(config('stripe.secret'));
+
             $paymentIntent = PaymentIntent::create([
                 'amount' => $validated['amount'] * 100,
                 'currency' => 'MAD',
@@ -185,15 +187,19 @@ class PaymentController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Payment $payment)
     {
-        $validated = $request->validate([
-            'rental_id' => 'required|exists:rentals,id',
-            'amount' => 'required|numeric|min:0',
-            'payment_date' => 'required|date|date_format:Y-m-d',
-        ]);
+        try {
+            $validated = $request->validate([
+                'rental_id' => 'required|exists:rentals,id',
+                'amount' => 'required|numeric|min:0',
+                'payment_date' => 'required|date|date_format:Y-m-d',
+            ]);
 
-        $payment->update($validated);
+            $payment->update($validated);
 
-        return response()->json($payment, 200);
+            return response()->json($payment, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -216,8 +222,12 @@ class PaymentController extends Controller implements HasMiddleware
      */
     public function destroy(Payment $payment)
     {
-        $payment->delete();
+        try {
+            $payment->delete();
 
-        return response()->json(['message' => 'payment deleted'], 200);
+            return response()->json(['message' => 'payment deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

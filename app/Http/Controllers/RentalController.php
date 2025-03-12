@@ -111,16 +111,20 @@ class RentalController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'car_id' => 'required|exists:cars,id',
-            'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after_or_equal:start_date'
-        ]);
+        try {
+            $validated = $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'car_id' => 'required|exists:cars,id',
+                'start_date' => 'required|date|after_or_equal:today',
+                'end_date' => 'required|date|after_or_equal:start_date'
+            ]);
 
-        $rental = $request->user()->rentals()->create($validated);
+            $rental = $request->user()->rentals()->create($validated);
 
-        return response()->json($rental, 201);
+            return response()->json($rental, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**

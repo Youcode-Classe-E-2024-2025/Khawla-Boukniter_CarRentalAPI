@@ -46,20 +46,28 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required|unique:users|email',
-            'password' => 'required|min:6'
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required',
+                'email' => 'required|unique:users|email',
+                'password' => 'required|min:6'
+            ]);
 
-        $user = User::create($validated);
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password'])
+            ]);
 
-        $token = $user->createToken($request->name);
+            $token = $user->createToken($request->name);
 
-        return [
-            'user' => $user,
-            'token' => $token->plainTextToken
-        ];
+            return [
+                'user' => $user,
+                'token' => $token->plainTextToken
+            ];
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -82,23 +90,27 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|exists:users|email',
-            'password' => 'required'
-        ]);
+        try {
+            $validated = $request->validate([
+                'email' => 'required|exists:users|email',
+                'password' => 'required'
+            ]);
 
-        $user = User::where('email', $validated['email'])->first();
+            $user = User::where('email', $validated['email'])->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return 'user not found or credentials are not correct';
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return 'user not found or credentials are not correct';
+            }
+
+            $token = $user->createToken($user->name);
+
+            return [
+                'user' => $user,
+                'token' => $token->plainTextToken
+            ];
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        $token = $user->createToken($user->name);
-
-        return [
-            'user' => $user,
-            'token' => $token->plainTextToken
-        ];
     }
 
     /**

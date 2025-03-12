@@ -108,19 +108,23 @@ class CarController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'make' => 'required|string|max:255',
-            'model' => 'required|string|max:255',
-            'year' => 'required|integer|digits:4',
-            'price' => 'required|numeric|min:0',
-            'is_available' => 'boolean'
-        ]);
+        try {
+            $validated = $request->validate([
+                'make' => 'required|string|max:255',
+                'model' => 'required|string|max:255',
+                'year' => 'required|integer|digits:4',
+                'price' => 'required|numeric|min:0',
+                'is_available' => 'boolean'
+            ]);
 
-        $validated['is_available'] = true;
+            $validated['is_available'] = true;
 
-        $car = Car::create($validated);
+            $car = Car::create($validated);
 
-        return response()->json($car, 201);
+            return response()->json($car, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -174,16 +178,20 @@ class CarController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Car $car)
     {
-        $validated = $request->validate([
-            'make' => 'required|string|max:255',
-            'model' => 'required|string|max:255',
-            'year' => 'required|integer|digits:4',
-            'price' => 'required|numeric|min:0'
-        ]);
+        try {
+            $validated = $request->validate([
+                'make' => 'required|string|max:255',
+                'model' => 'required|string|max:255',
+                'year' => 'required|integer|digits:4',
+                'price' => 'required|numeric|min:0'
+            ]);
 
-        $car->update($validated);
+            $car->update($validated);
 
-        return response()->json($car, 200);
+            return response()->json($car, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -206,8 +214,12 @@ class CarController extends Controller implements HasMiddleware
      */
     public function destroy(Car $car)
     {
-        $car->delete();
+        try {
+            $car->delete();
 
-        return response()->json(['message' => 'car deleted'], 200);
+            return response()->json(['message' => 'car deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
