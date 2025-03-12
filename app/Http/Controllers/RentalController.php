@@ -74,11 +74,11 @@ class RentalController extends Controller implements HasMiddleware
         }
 
         if ($request->has('start_date')) {
-            $query->where('start_date', '>=' . $request->start_date);
+            $query->where('start_date', '>=', $request->start_date);
         }
 
         if ($request->has('end_date')) {
-            $query->where('end_date', '<=' . $request->end_date);
+            $query->where('end_date', '<=', $request->end_date);
         }
 
         if ($request->has('status')) {

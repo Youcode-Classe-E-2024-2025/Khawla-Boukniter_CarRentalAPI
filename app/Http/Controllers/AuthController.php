@@ -40,7 +40,7 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="User registered successfully",
+     *         description="User registered",
      *     )
      * )
      */

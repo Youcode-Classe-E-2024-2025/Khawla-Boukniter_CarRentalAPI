@@ -69,11 +69,11 @@ class PaymentController extends Controller implements HasMiddleware
         }
 
         if ($request->has('min_amount')) {
-            $query->where('amount', '>=' . $request->min_amount);
+            $query->where('amount', '>=', $request->min_amount);
         }
 
         if ($request->has('max_amount')) {
-            $query->where('amount', '<=' . $request->max_amount);
+            $query->where('amount', '<=', $request->max_amount);
         }
 
         if ($request->has('payment_date')) {
@@ -126,7 +126,7 @@ class PaymentController extends Controller implements HasMiddleware
                 'metadate' => ['rental_id' => $validated['rental_id']]
             ]);
 
-            $validated['status'] = 'pending';
+            $validated['statut'] = 'pending';
             $validated['stripe_payment_id'] = $paymentIntent->id;
 
             $payment = $request->user()->payments()->create($validated);

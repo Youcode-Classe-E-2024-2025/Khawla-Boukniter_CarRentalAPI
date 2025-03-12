@@ -71,18 +71,18 @@ class CarController extends Controller implements HasMiddleware
         }
 
         if ($request->has('year')) {
-            $query->where('year', 'like', '%' . $request->year . '%');
+            $query->where('year', $request->year);
         }
 
         if ($request->has('min_price')) {
-            $query->where('price', 'like', '>=' . $request->min_price);
+            $query->where('price', '>=', $request->min_price);
         }
 
         if ($request->has('max_price')) {
-            $query->where('price', 'like', '<=' . $request->max_price);
+            $query->where('price', '<=', $request->max_price);
         }
 
-        return $query->paginate(10);
+        return response()->json($query->paginate(10));
     }
 
     /**
