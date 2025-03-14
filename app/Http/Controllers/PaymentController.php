@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\Rental;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -123,17 +125,22 @@ class PaymentController extends Controller implements HasMiddleware
             $paymentIntent = PaymentIntent::create([
                 'amount' => $validated['amount'] * 100,
                 'currency' => 'MAD',
-                'metadate' => ['rental_id' => $validated['rental_id']]
+                'metadata' => ['rental_id' => $validated['rental_id']]
             ]);
 
             $validated['statut'] = 'pending';
             $validated['stripe_payment_id'] = $paymentIntent->id;
 
-            $payment = $request->user()->payments()->create($validated);
+
+            $payment = Rental::findOrFail($validated['rental_id'])->payments()->create($validated);
 
             return response()->json(['payment' => $payment, 'clientSecret' => $paymentIntent->client_secret], 201);
+        } catch (ModelNotFoundException $e) {
+
+            return response()->json(['error' => 'rental model not found', 404]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+
+            return response()->json(['error' => 'error while retrieving payment' . $e->getMessage()]);
         }
     }
 
